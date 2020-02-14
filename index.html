@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Multi-Selector</title>
+        <link rel="stylesheet" href="css/multi-selector.css">
+    </head>
+    <body>
+        <section>
+            <select name="multi-selector" id="multi-selector">
+                <option value="1">Teste 1</option>
+                <option value="2">Teste 2</option>
+                <option value="3">Teste 3</option>
+                <option value="4">Teste 4</option>
+                <option value="5">Teste 5</option>
+            </select>
+        </section>
+        <script src="js/multi-selector.js"></script>
+        <script>
+            (function(){
+                const selector = new MultiSelector(document.getElementById('multi-selector'), {
+                    aposAbrir: (a) => {
+                        console.log(this, a);
+                    },
+                    aposFechar: (a) => {
+                        console.log(this,a);
+                    }
+                });
+
+                setTimeout(() => {
+                    selector.open();
+                }, 1000 * 2);
+            })();
+        </script>
+    </body>
+</html>
