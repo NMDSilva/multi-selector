@@ -1,0 +1,191 @@
+$border-seletor: #ccc;
+$backgroud-seletor: white;
+
+$backgroud-list: rgb(245, 245, 245);
+$azul-ai: #39778e;
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+.select-container{
+    font-family: sans-serif;
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    min-height: 34px;
+    min-width: 200px;
+    max-width: 400px;
+    border: 1px solid $border-seletor;
+    position: relative;
+    cursor: pointer;
+    background-color: $backgroud-seletor;
+    
+    .multi-select{
+        display: flex;
+        align-items: center;
+        padding: 2px 4px;
+        flex-wrap: wrap;
+        min-height: 34px;
+        width: 100%;
+        margin-right: 25px;
+        font-size: 0.9rem;
+        color: darken($backgroud-list, 60%);
+
+        &::before{
+            content: attr(data-tags-hidden);
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            bottom: 5px;
+            right: 25px;
+            width: 16px;
+            height: 16px;
+            font-size: 10px;
+            font-weight: bold;
+            opacity: 0;
+            background-color: $backgroud-list;
+            border: thin solid $border-seletor;
+        }
+        &.hidden-tags::before{
+            opacity: 1;
+        }
+
+        &::after{
+            position: absolute;
+            content: '';
+            top: 17px;
+            right: 0px;
+            width: 5px;
+            height: 5px;
+            border-style: solid;
+            border-color: $border-seletor;
+            border-width: 0 3px 3px 0;
+            padding: 2px;
+            transform:  translate(-50%, -75%) rotate(45deg);
+            transition: all 300ms;
+        }
+        &:hover::after{ border-color: darken($border-seletor, 20%); }
+        
+        &.open::after{ transform: translate(-50%, -50%) rotate(225deg); }
+
+        .tag{
+            position: relative;
+            display: block;
+            border: thin solid $border-seletor;
+            padding: 4px 20px 4px 4px;
+            margin: 3px;
+            background-color: $backgroud-list;
+            &::after{
+                content: 'x';
+                text-transform: uppercase;
+                position: absolute;
+                right: 4px;
+                font-weight: bold;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-left: 5px;
+        }
+
+        .loading:after {
+            content: '';
+            display: block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 2px solid $azul-ai;
+            border-color: $azul-ai transparent $azul-ai transparent;
+            animation: loading-ring 1.2s linear infinite;
+        }
+
+        @keyframes loading-ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        span{
+            padding-left: 10px;
+        }
+    }
+
+    .multi-select-list{
+        position: absolute;
+        box-sizing: border-box;
+        width: 100%;
+        top: 100%;
+        left: 0px;
+        right: 0px;
+        background-color: $backgroud-list;
+        border: 1px solid $border-seletor;
+        transform: translateY(-50%) scaleY(0);
+        opacity: 0;
+        transition: all 500ms;
+        
+        &.open{
+            transform: translateY(0%) scaleY(1);
+            opacity: 1;
+            z-index: 100;
+        }
+        
+        .item{
+            display: flex;
+            position: relative;
+            padding: 2px 10px;
+            text-align: justify;
+            color: darken($backgroud-list, 60%);
+            font-size: 0.9rem;
+            align-items: center;
+            min-height: 1.8rem;
+            border-bottom: 1px solid darken($backgroud-list, 10%);
+            z-index: 1001;
+    
+            &::before{
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 5px;
+                height: 100%;
+                background-color: $azul-ai;
+                opacity: 0;
+                transition: all 150ms;
+            }
+             
+            &:nth-last-child(){
+                border-bottom: initial;
+            }
+    
+            &:hover::before{
+                opacity: 1;
+            }
+    
+            &:hover{
+                background-color: darken($color: $backgroud-list, $amount: 3%);
+            }
+    
+            &.checked{
+                background-color: darken($color: $backgroud-list, $amount: 3%);
+            }
+            &.checked::before{
+                opacity: 1;
+            }
+        }
+    }
+    
+    
+}
