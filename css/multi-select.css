@@ -5,6 +5,10 @@
           box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -37,6 +41,8 @@ body {
   position: relative;
   cursor: pointer;
   background-color: white;
+  /* Handle */
+  /* Handle on hover */
 }
 
 .select-container .multi-select {
@@ -183,6 +189,8 @@ body {
   border: 1px solid #ccc;
   -webkit-transform: translateY(-50%) scaleY(0);
           transform: translateY(-50%) scaleY(0);
+  max-height: 250px;
+  overflow-y: auto;
   opacity: 0;
   -webkit-transition: all 500ms;
   transition: all 500ms;
@@ -243,4 +251,21 @@ body {
 
 .select-container .multi-select-list .item.checked::before {
   opacity: 1;
+}
+
+.select-container ::-webkit-scrollbar {
+  width: 5px;
+}
+
+.select-container ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.select-container ::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  border-radius: 20px;
+}
+
+.select-container ::-webkit-scrollbar-thumb:hover {
+  background: #b3b3b3;
 }
