@@ -11,6 +11,7 @@ interface ObjInterface {
   afterAddItem?: any;
   afterRemoveItem?: any;
   loading: boolean;
+  txtLoading: string;
 }
 
 class MultiSelect {
@@ -26,7 +27,8 @@ class MultiSelect {
     afterClose: null,
     afterAddItem: null,
     afterRemoveItem: null,
-    loading: false
+    loading: false,
+    txtLoading: 'Loading...'
   };
   objDefinitions: ObjInterface;
   element: HTMLElement;
@@ -53,25 +55,26 @@ class MultiSelect {
     else { console.warn(`You can't assign multiple times the class MultiSelect to #${obj.id}`); }
   }
   
-  createItem(id: any, value: string, eventAdd: boolean = true) {
-    if (!this.exists(id)) {
+  createItem(item: any, eventAdd: boolean = true) {
+    if (!this.exists(item.id)) {
       let divElement = document.createElement('div');
-      divElement.setAttribute('data-id', id);
+      divElement.dataset.id = item.id;
+      divElement.dataset.item = JSON.stringify(item);
       divElement.classList.add('item');
-      if (this.objDefinitions.maxTextItem && value.length > this.objDefinitions.maxTextItem) {
-        divElement.setAttribute('title', value);
-        value = value.substr(0, this.objDefinitions.maxTextItem) + '...';
+      if (this.objDefinitions.maxTextItem && item.value.length > this.objDefinitions.maxTextItem) {
+        divElement.setAttribute('title', item.value);
+        item.value = item.value.substr(0, this.objDefinitions.maxTextItem) + '...';
       }
-      divElement.innerText = value;
+      divElement.innerText = item.value;
       this.divListElements.appendChild(divElement);
       if (eventAdd) {
         divElement.addEventListener('click', () => {
-          if (divElement.classList.contains('checked')) { this.removeItem(id); }
-          else { this.addItem(id); }
+          if (divElement.classList.contains('checked')) { this.removeItem(item.id); }
+          else { this.addItem(item.id); }
         });
       }
     }
-    else { console.warn(`The id ${id} already exists on MultiSelect`); }
+    else { console.warn(`The id ${item.id} already exists on MultiSelect`); }
   }
   
   deleteItem(id: any) {
@@ -108,7 +111,7 @@ class MultiSelect {
     
     // Chamar função após execução caso exista
     if (typeof this.objDefinitions.afterAddItem === 'function') {
-      this.objDefinitions.afterAddItem(idElement, divElement.innerText);
+      this.objDefinitions.afterAddItem(JSON.parse(divElement.dataset.item));
     }
   }
   
@@ -123,7 +126,7 @@ class MultiSelect {
     
     // Chamar função após execução caso exista
     if (typeof this.objDefinitions.afterRemoveItem === 'function') {
-      this.objDefinitions.afterRemoveItem(idElement, divElement.innerText);
+      this.objDefinitions.afterRemoveItem(JSON.parse(divElement.dataset.item));
     }
   }
   
@@ -195,7 +198,7 @@ class MultiSelect {
     if (this.objDefinitions.loading) {
       this.divLoading.classList.add('loading');
       this.divElementSelected.appendChild(this.divLoading);
-      txtLoading = 'Loading...';
+      txtLoading = this.objDefinitions.txtLoading;
     }
     let spanLabel = document.createElement('span');
     spanLabel.innerText = txtLoading || this.objDefinitions.label;
@@ -214,7 +217,7 @@ class MultiSelect {
   
   _loadList(items: any[]) {
     if (items.length > 0) {
-      items.map(({ id, value }) => this.createItem(id, value));
+      items.map((item) => this.createItem(item));
       if (this.objDefinitions.value.length) {
         this.setValues(this.objDefinitions.value);
         this.objDefinitions.value = [];
@@ -225,7 +228,7 @@ class MultiSelect {
   
   _noItems() {
     if (this.objDefinitions.emptyItems.length) {
-      this.objDefinitions.emptyItems.map(({ id, value }) => this.createItem(id, value, false));
+      this.objDefinitions.emptyItems.map((item) => this.createItem(item, false));
     }
   }
   

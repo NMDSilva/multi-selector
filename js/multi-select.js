@@ -24,7 +24,8 @@ var MultiSelect = /** @class */ (function () {
             afterClose: null,
             afterAddItem: null,
             afterRemoveItem: null,
-            loading: false
+            loading: false,
+            txtLoading: 'Loading...'
         };
         this.container = document.createElement('div');
         this.divElementSelected = document.createElement('div');
@@ -57,32 +58,33 @@ var MultiSelect = /** @class */ (function () {
             console.warn("You can't assign multiple times the class MultiSelect to #" + obj.id);
         }
     }
-    MultiSelect.prototype.createItem = function (id, value, eventAdd) {
+    MultiSelect.prototype.createItem = function (item, eventAdd) {
         var _this = this;
         if (eventAdd === void 0) { eventAdd = true; }
-        if (!this.exists(id)) {
+        if (!this.exists(item.id)) {
             var divElement_1 = document.createElement('div');
-            divElement_1.setAttribute('data-id', id);
+            divElement_1.dataset.id = item.id;
+            divElement_1.dataset.item = JSON.stringify(item);
             divElement_1.classList.add('item');
-            if (this.objDefinitions.maxTextItem && value.length > this.objDefinitions.maxTextItem) {
-                divElement_1.setAttribute('title', value);
-                value = value.substr(0, this.objDefinitions.maxTextItem) + '...';
+            if (this.objDefinitions.maxTextItem && item.value.length > this.objDefinitions.maxTextItem) {
+                divElement_1.setAttribute('title', item.value);
+                item.value = item.value.substr(0, this.objDefinitions.maxTextItem) + '...';
             }
-            divElement_1.innerText = value;
+            divElement_1.innerText = item.value;
             this.divListElements.appendChild(divElement_1);
             if (eventAdd) {
                 divElement_1.addEventListener('click', function () {
                     if (divElement_1.classList.contains('checked')) {
-                        _this.removeItem(id);
+                        _this.removeItem(item.id);
                     }
                     else {
-                        _this.addItem(id);
+                        _this.addItem(item.id);
                     }
                 });
             }
         }
         else {
-            console.warn("The id " + id + " already exists on MultiSelect");
+            console.warn("The id " + item.id + " already exists on MultiSelect");
         }
     };
     MultiSelect.prototype.deleteItem = function (id) {
@@ -117,7 +119,7 @@ var MultiSelect = /** @class */ (function () {
         this._renderItemsValues();
         // Chamar função após execução caso exista
         if (typeof this.objDefinitions.afterAddItem === 'function') {
-            this.objDefinitions.afterAddItem(idElement, divElement.innerText);
+            this.objDefinitions.afterAddItem(JSON.parse(divElement.dataset.item));
         }
     };
     MultiSelect.prototype.removeItem = function (idElement) {
@@ -128,7 +130,7 @@ var MultiSelect = /** @class */ (function () {
         this._renderItemsValues();
         // Chamar função após execução caso exista
         if (typeof this.objDefinitions.afterRemoveItem === 'function') {
-            this.objDefinitions.afterRemoveItem(idElement, divElement.innerText);
+            this.objDefinitions.afterRemoveItem(JSON.parse(divElement.dataset.item));
         }
     };
     MultiSelect.prototype.open = function () {
@@ -188,7 +190,7 @@ var MultiSelect = /** @class */ (function () {
         if (this.objDefinitions.loading) {
             this.divLoading.classList.add('loading');
             this.divElementSelected.appendChild(this.divLoading);
-            txtLoading = 'Loading...';
+            txtLoading = this.objDefinitions.txtLoading;
         }
         var spanLabel = document.createElement('span');
         spanLabel.innerText = txtLoading || this.objDefinitions.label;
@@ -210,10 +212,7 @@ var MultiSelect = /** @class */ (function () {
     MultiSelect.prototype._loadList = function (items) {
         var _this = this;
         if (items.length > 0) {
-            items.map(function (_a) {
-                var id = _a.id, value = _a.value;
-                return _this.createItem(id, value);
-            });
+            items.map(function (item) { return _this.createItem(item); });
             if (this.objDefinitions.value.length) {
                 this.setValues(this.objDefinitions.value);
                 this.objDefinitions.value = [];
@@ -226,10 +225,7 @@ var MultiSelect = /** @class */ (function () {
     MultiSelect.prototype._noItems = function () {
         var _this = this;
         if (this.objDefinitions.emptyItems.length) {
-            this.objDefinitions.emptyItems.map(function (_a) {
-                var id = _a.id, value = _a.value;
-                return _this.createItem(id, value, false);
-            });
+            this.objDefinitions.emptyItems.map(function (item) { return _this.createItem(item, false); });
         }
     };
     MultiSelect.prototype._renderItemsValues = function () {

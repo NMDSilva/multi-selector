@@ -13,21 +13,24 @@
     (function(){
       const selector = new MultiSelect(document.getElementById('div_multi'), {
         loading: true,
-        value: [1, 2, 3]
+        value: [1, 2, 3],
+        afterAddItem: (item) => {
+          console.log(item);
+        }
       });
       setTimeout(() => {
         selector.open();
       }, 1000 * 1);
       setTimeout(() => {
         selector.setItems([
-          { id: 1, value: 'Teste 1' },
+          { id: 1, value: 'Teste 1', a: 'a', b:1 },
           { id: 2, value: 'Teste 2' },
           { id: 3, value: 'Teste 3' },
           { id: 4, value: 'Teste 4' },
           { id: 5, value: 'Teste 5' },
           { id: 6, value: 'Teste 6' },
           { id: 7, value: 'Teste 7' },
-          { id: 8, value: 'Teste 8' },
+          { id: 8, value: 'Teste 8', a: 'a', b:1 },
           { id: 9, value: 'Teste 9' },
           { id: 10, value: 'Teste 10' },
           { id: 11, value: 'Teste 11' },
@@ -35,13 +38,13 @@
           { id: 13, value: 'Teste 13' },
           { id: 14, value: 'Teste 14' },
           { id: 15, value: 'Teste 15' },
-          { id: 16, value: 'Teste 16' },
+          { id: 16, value: 'Teste 16', a: 'a', b:1 },
           { id: 17, value: 'Teste 17' },
           { id: 18, value: 'Teste 18' },
           { id: 19, value: 'Teste 19' },
           { id: 20, value: 'Teste 20' },
         ]);
-      }, 1000 * 5);
+      }, 1000 * 2);
     })();
   </script>
 </body>
